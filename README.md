@@ -12,7 +12,7 @@
 
 ---
 
-## 🏛️ Placement Context
+## Placement Context
 
 This project encompasses key engineering deliverables developed during a **1-week Work Experience Placement** with the **Accelerator Controls / EPICS Archiver Team** at the **STFC ISIS Neutron and Muon Source** ([Rutherford Appleton Laboratory](https://www.isis.stfc.ac.uk/), July 2026).
 
@@ -20,9 +20,9 @@ The work focused on bridging live accelerator control data into a modular optics
 
 ---
 
-## ✨ Featured Deliverables & Contributions
+## Featured Deliverables & Contributions
 
-### 1. ⚡ Live EPICS Archiver REST Bridge (`src/optics_gui/io/`)
+### 1. Live EPICS Archiver REST Bridge (`src/optics_gui/io/`)
 * **Real-time Data Ingestion:** Built Python client modules connecting to the facility's EPICS archiver REST API (`/glob`, `/getPVStatus`, `/data`) to pull live machine state data across the ~10 ms synchrotron acceleration ramp.
 * **Physics & Magnet Ingestion:** Automated retrieval and parsing of trim-quadrupole settings, horizontal/vertical corrector currents, beam position monitor (BPM) readbacks, and harmonic tune programmes.
 * **API Verification & Edge-Case Handling:** Tested documented internal endpoint behaviors against the live archiver, corrected inaccuracies in API documentation, and implemented robust fallbacks for unarchived or missing test-rig channels.
@@ -42,14 +42,14 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
 
 ---
 
-### 2. 🚀 40,000+ Process Variable Search Engine (`web/pv_search.html`)
+### 2. 40,000+ Process Variable Search Engine (`web/pv_search.html`)
 * **The Bottleneck:** An existing process variable lookup covering 40,000+ PVs suffered from ~5-second latency on every keystroke, freezing the interface.
 * **The Solution:** Vectorised the parsing pipeline with Pandas, introduced smart input debouncing, and cached repetitive regex normalisation routines.
 * **Result:** Achieved instantaneous, fluid keystroke filtering across the entire 40k+ variable database.
 
 ---
 
-### 3. 🪐 Interactive 3D WebGL Synchrotron Simulator (`web/isis_synchrotron_3d.html`)
+### 3. Interactive 3D WebGL Synchrotron Simulator (`web/isis_synchrotron_3d.html`)
 * **Lattice-Accurate Geometry:** Built a Three.js / WebGL 3D model of the synchrotron generated from **real MAD-X lattice dipole bend angles** rather than an idealized circular ring.
 * **Features:**
   * Interactive camera orbits and superperiod inspection (Superperiods 0 through 9).
@@ -58,15 +58,15 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
 
 ---
 
-### 4. 📊 Live Streamlit Archiver Bridge (`apps/archiver_live_app.py`)
-* Comprehensive operator and researcher dashboard allowing parameter sweeps across cycle time ($0 \text{ to } 10\text{ ms}$).
+### 4. Live Streamlit Archiver Bridge (`apps/archiver_live_app.py`)
+* Comprehensive operator and researcher dashboard allowing parameter sweeps across cycle time (0 to 10 ms).
 * Direct visualization of trim quadrupole currents, resonance lines, and live closed-orbit measurements.
 
 ![ISIS Synchrotron Dashboard](assets/screenshots/isis_synchrotron_dashboard.png)
 
 ---
 
-## 🔬 Accelerator Optics Architecture
+## Accelerator Optics Architecture
 
 The repository provides a modular backend for modeling the beam dynamics and optics of the ISIS Rapid Cycling Synchrotron:
 
@@ -74,7 +74,7 @@ The repository provides a modular backend for modeling the beam dynamics and opt
 isis-rcs-optics/
 ├── src/
 │   └── optics_gui/
-│       ├── io/                    # ⭐ EPICS Archiver REST client & data ingestion
+│       ├── io/                    # EPICS Archiver REST client & data ingestion
 │       │   ├── epics_archiver_client.py
 │       │   ├── epics_live.py
 │       │   ├── measurements.py
@@ -88,10 +88,10 @@ isis-rcs-optics/
 │       ├── aperture.py            # Mechanical aperture clearance margins
 │       └── snapshot.py            # Whole-system machine state snapshot integration
 ├── web/
-│   ├── isis_synchrotron_3d.html   # ⭐ 3D WebGL Synchrotron simulation (Three.js)
-│   └── pv_search.html             # ⭐ 40,000+ Process Variable search tool
+│   ├── isis_synchrotron_3d.html   # 3D WebGL Synchrotron simulation (Three.js)
+│   └── pv_search.html             # 40,000+ Process Variable search tool
 ├── apps/
-│   └── archiver_live_app.py       # ⭐ Streamlit live archiver bridge application
+│   └── archiver_live_app.py       # Streamlit live archiver bridge application
 ├── assets/
 │   └── screenshots/               # High-res UI & 3D renders
 ├── docs/                          # Placement notes, EPICS reference, and guides
@@ -100,7 +100,7 @@ isis-rcs-optics/
 
 ---
 
-## 🖼️ Visual Gallery
+## Visual Gallery
 
 | 3D Synchrotron Ring | Superperiod Layout |
 |:---:|:---:|
@@ -112,7 +112,7 @@ isis-rcs-optics/
 
 ---
 
-## 🚀 Quickstart Guide
+## Quickstart Guide
 
 ### 1. Running the 3D WebGL Synchrotron Simulator
 No dependencies required — open directly in any browser:
@@ -148,7 +148,7 @@ streamlit run apps/archiver_live_app.py
 
 ---
 
-## 📚 Technical Stack
+## Technical Stack
 * **Languages & Runtimes:** Python 3.10+, JavaScript (ES6+), HTML5/CSS3
 * **Graphics & Visualization:** Three.js, WebGL, Matplotlib, Plotly
 * **Scientific Computing:** NumPy, Pandas, cpymad (CERN MAD-X interface)
