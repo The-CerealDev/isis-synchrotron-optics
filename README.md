@@ -47,6 +47,8 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
 * **The Solution:** Vectorised the parsing pipeline with Pandas, introduced smart input debouncing, and cached repetitive regex normalisation routines.
 * **Result:** Achieved instantaneous, fluid keystroke filtering across the entire 40k+ variable database.
 
+![ISIS PV Search Tool](assets/screenshots/isis_pv_search_live.png)
+
 ---
 
 ### 3. Interactive 3D WebGL Synchrotron Simulator (`web/isis_synchrotron_3d.html`)
@@ -63,6 +65,8 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
 ### 4. Live Streamlit Archiver Bridge (`apps/archiver_live_app.py`)
 * Comprehensive operator and researcher dashboard allowing parameter sweeps across cycle time (0 to 10 ms).
 * Direct visualization of trim quadrupole currents, resonance lines, and live closed-orbit measurements.
+
+![ISIS Archiver Streamlit Bridge](assets/screenshots/isis_archiver_bridge_live.png)
 
 ---
 
