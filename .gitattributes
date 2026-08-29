@@ -1,0 +1,7 @@
+# GitHub Linguist overrides
+# Treat Jupyter Notebooks as documentation so language stats reflect real Python / WebGL code
+*.ipynb linguist-documentation
+*.ipynb linguist-detectable=false
+
+# Auto-detect text files and normalize line endings
+* text=auto
