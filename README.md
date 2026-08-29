@@ -56,13 +56,13 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
   * Real-time beam path trajectory and animated particles synchronized to the 50 Hz machine cycle.
   * Standalone, zero-install HTML5 application capable of running locally in any modern browser.
 
+![ISIS Synchrotron 3D Dashboard](assets/screenshots/isis_synchrotron_dashboard.png)
+
 ---
 
 ### 4. Live Streamlit Archiver Bridge (`apps/archiver_live_app.py`)
 * Comprehensive operator and researcher dashboard allowing parameter sweeps across cycle time (0 to 10 ms).
 * Direct visualization of trim quadrupole currents, resonance lines, and live closed-orbit measurements.
-
-![ISIS Synchrotron Dashboard](assets/screenshots/isis_synchrotron_dashboard.png)
 
 ---
 
