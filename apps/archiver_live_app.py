@@ -11,7 +11,7 @@ ISIS network.
 
 Run it once you're on the network:
 
-    streamlit run Dev/12_IO/archiver_live_app.py
+    streamlit run apps/archiver_live_app.py
 """
 
 import hashlib
@@ -275,7 +275,7 @@ with tab_bpm:
     )
 
     lattice_folder = st.text_input(
-        "Lattice folder", value=str(REPO_ROOT / "Dev" / "Lattice_Files" / "00_Simplified_Lattice")
+        "Lattice folder", value=str(REPO_ROOT / "tutorials" / "Lattice_Files" / "00_Simplified_Lattice")
     )
 
     if st.button("Preview BPM table (test data)", type="primary"):
@@ -286,7 +286,7 @@ with tab_bpm:
                 lattice_folder=lattice_folder,
                 sequence_name="synchrotron",
                 aperture_file=None,
-                output_dir=str(REPO_ROOT / "Dev" / "12_IO" / "student_runs" / "_live_app"),
+                output_dir=str(REPO_ROOT / "tutorials" / "12_IO" / "student_runs" / "_live_app"),
             )
             model.load_lattice(use_sequence=False)
             model.apply_machine_state(machine_state)
@@ -747,7 +747,7 @@ series = build_full_cycle_snapshot_series(
     qy_values=[3.731, 3.731, 3.731],
     base_config=SnapshotConfig(cycle_time_ms=0.0, lattice_folder=lattice_folder, run_envelope=False, run_aperture=False),
     label="working_point_series",
-    output_dir=str(REPO_ROOT / "Dev" / "12_IO" / "student_runs" / "working_point_series"),
+    output_dir=str(REPO_ROOT / "tutorials" / "12_IO" / "student_runs" / "working_point_series"),
 )
 tune_programme = series.table("tune_programme")
 working_points = series.table("working_points")

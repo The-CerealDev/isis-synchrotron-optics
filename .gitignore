@@ -59,3 +59,5 @@ madx_runs/
 snapshot_tests/
 *_tests/
 student_runs/
+pv_search_cache.json
+apps/pv_search_cache.json

@@ -63,10 +63,19 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
 ---
 
 ### 4. Live Streamlit Archiver Bridge (`apps/archiver_live_app.py`)
-* Comprehensive operator and researcher dashboard allowing parameter sweeps across cycle time (0 to 10 ms).
-* Direct visualization of trim quadrupole currents, resonance lines, and live closed-orbit measurements.
+* **Live EPICS Pipeline & Status Ledger:** Directly integrates the REST bridge (`epics_archiver_client.py` and `epics_live.py`) to stream real telemetry into the optics computation core.
+* **Working Tabs & Interactive Diagnostics:**
+  * **Architecture & Status:** Visualises real-time data movement from Athena archiver endpoints through to closed-orbit/tune GUIs.
+  * **PV Search:** Performs instant regex filtering, magnet family parsing, and CSV exporting across thousands of PV records.
+  * **BPM Geometry & Orbit:** Integrates MAD-X TWISS lattice execution across all 36 beam position monitors.
 
-![ISIS Archiver Streamlit Bridge](assets/screenshots/isis_archiver_bridge_live.png)
+| Architecture & Data Movement | Active PV Search & Magnet Parsing |
+|:---:|:---:|
+| ![Archiver Data Pipeline](assets/screenshots/archiver_tab_status_active.png) | ![Archiver PV Search](assets/screenshots/archiver_tab_search_active.png) |
+
+| MAD-X TWISS 36-BPM Geometry Preview |
+|:---:|
+| ![BPM Geometry Table](assets/screenshots/archiver_tab_bpm_preview.png) |
 
 ---
 
