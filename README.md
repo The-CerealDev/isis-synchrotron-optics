@@ -69,13 +69,13 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
   * **PV Search:** Performs instant regex filtering, magnet family parsing, and CSV exporting across thousands of PV records.
   * **BPM Geometry & Orbit:** Integrates MAD-X TWISS lattice execution across all 36 beam position monitors.
 
-| Architecture & Data Movement | Active PV Search & Magnet Parsing |
+| Tune & Harmonics Readouts (A3) | Corrector Current Ingestion (A1) |
 |:---:|:---:|
-| ![Archiver Data Pipeline](assets/screenshots/archiver_tab_status_active.png) | ![Archiver PV Search](assets/screenshots/archiver_tab_search_active.png) |
+| ![Tune & Harmonics](assets/screenshots/archiver_tab_tune_live.png) | ![Corrector Settings](assets/screenshots/archiver_tab_correctors_live.png) |
 
-| MAD-X TWISS 36-BPM Geometry Preview |
-|:---:|
-| ![BPM Geometry Table](assets/screenshots/archiver_tab_bpm_preview.png) |
+| Architecture & Data Pipeline Ledger | MAD-X TWISS 36-BPM Geometry (A2) |
+|:---:|:---:|
+| ![Archiver Data Pipeline](assets/screenshots/archiver_tab_status_active.png) | ![BPM Geometry Table](assets/screenshots/archiver_tab_bpm_preview.png) |
 
 ---
 

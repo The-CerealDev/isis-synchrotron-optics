@@ -90,16 +90,13 @@ st.caption(
 
 with st.sidebar:
     st.header("Archiver connection")
-    demo_mode = st.toggle("Demo / Offline Mode (sample telemetry)", value=True, help="Enables offline demonstration using authentic recorded ISIS telemetry without requiring connection to the internal STFC network.")
-    if demo_mode:
-        st.info("Operating in Offline Demo Mode using authentic ISIS telemetry snapshots.")
-    base_url = st.text_input("Archiver base URL", value=DEFAULT_BASE_URL, disabled=demo_mode)
+    base_url = st.text_input("Archiver base URL", value=DEFAULT_BASE_URL)
     cycle_time_ms = st.number_input("cycle_time_ms", value=0.0, step=0.5)
     st.caption("cycle_time_ms picks where in the ~10ms accelerator ramp -- every team uses this axis.")
 
     st.divider()
     st.header("Point in history")
-    history_mode = st.radio("When", ["Live (now)", "As of a specific day"], index=0, disabled=demo_mode)
+    history_mode = st.radio("When", ["Live (now)", "As of a specific day"], index=0)
     selected_day = None
     if history_mode == "As of a specific day":
         selected_day = st.date_input("Day", value=date.today())
@@ -110,51 +107,11 @@ with st.sidebar:
     )
 
 
-OFFLINE_TUNE_DEFAULTS = {
-    "H_Q": 4.3310,
-    "V_Q": 3.7310,
-    "D7SIN": 0.0012,
-    "D7COS": 0.0008,
-    "D8SIN": -0.0005,
-    "D8COS": 0.0007,
-    "F8SIN": 0.0015,
-    "F8COS": -0.0010,
-}
-
-OFFLINE_CORRECTOR_HD = {
-    0: 12.40, 1: 0.0, 2: 5.20, 3: -3.10, 4: 8.40,
-    5: 2.10, 6: 0.0, 7: -6.50, 8: 4.00, 9: 1.20
-}
-
-OFFLINE_CORRECTOR_VD = {
-    0: -9.00, 1: 0.0, 2: 4.10, 3: 7.30, 4: -2.00,
-    5: 5.50, 6: 0.0, 7: 3.20, 8: -8.10, 9: 0.50
-}
-
-
 def _end_of_day_utc(day):
     return datetime.combine(day, time(23, 59, 59, 999999), tzinfo=timezone.utc)
 
 
 def make_fetch_value():
-    if demo_mode:
-        def fetch_value(pv_name, as_of=None):
-            pv_upper = str(pv_name).upper()
-            for key, val in OFFLINE_TUNE_DEFAULTS.items():
-                if key in pv_upper:
-                    return val
-            match_hd = re.search(r"R(\d)HD1", pv_upper)
-            if match_hd:
-                sp = int(match_hd.group(1))
-                return OFFLINE_CORRECTOR_HD.get(sp, 0.0)
-            match_vd = re.search(r"R(\d)VD1", pv_upper)
-            if match_vd:
-                sp = int(match_vd.group(1))
-                return OFFLINE_CORRECTOR_VD.get(sp, 0.0)
-            return prospective_value(pv_name, -1.0, 1.0)
-
-        return fetch_value
-
     if history_mode == "As of a specific day" and selected_day is not None:
         pinned_as_of = _end_of_day_utc(selected_day)
 
@@ -172,12 +129,6 @@ def make_fetch_value():
 
 
 def make_list_available_times():
-    if demo_mode:
-        def list_available_times(device, family):
-            return [0.0, 1.0, 2.5, 3.5, 4.5, 5.0, 5.5, 6.5, 7.5, 8.5, 9.0, 10.0]
-
-        return list_available_times
-
     def list_available_times(device, family):
         return archiver_list_available_times(device, family, base_url=base_url)
 
@@ -185,12 +136,6 @@ def make_list_available_times():
 
 
 def make_list_available_times_dwtrim():
-    if demo_mode:
-        def list_available_times_dwtrim(signal):
-            return [0.0, 1.0, 2.5, 5.0, 7.5, 10.0]
-
-        return list_available_times_dwtrim
-
     def list_available_times_dwtrim(signal):
         return archiver_list_available_times_dwtrim(signal, base_url=base_url)
 
@@ -521,7 +466,7 @@ with tab_search:
 
     with st.expander("Load / replace PV list", expanded=not st.session_state.pv_records):
         pasted = st.text_area("Paste the JSON array from getAllPVs here", height=140)
-        col_a, col_b, col_c, col_d = st.columns(4)
+        col_a, col_b, col_c = st.columns(3)
         if col_a.button("Load pasted data", type="primary"):
             try:
                 records = json.loads(pasted)
@@ -542,17 +487,7 @@ with tab_search:
             reset_search_filters()
             save_search_cache(SEARCH_EXAMPLE_ROWS)
             st.rerun()
-        if col_c.button("Load TEST_PV.txt"):
-            pv_file = REPO_ROOT / "src" / "optics_gui" / "io" / "TEST_PV.txt"
-            if pv_file.exists():
-                records = json.loads(pv_file.read_text(encoding="utf-8"))
-                st.session_state.pv_records = records
-                st.session_state.search_data_version += 1
-                reset_search_filters()
-                save_search_cache(records)
-                st.success(f"Loaded {len(records):,} authentic PVs from TEST_PV.txt.")
-                st.rerun()
-        if col_d.button("Clear all data"):
+        if col_c.button("Clear all data"):
             st.session_state.pv_records = []
             st.session_state.search_data_version += 1
             reset_search_filters()
