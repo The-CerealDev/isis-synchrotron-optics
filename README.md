@@ -84,7 +84,7 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
 The repository provides a modular backend for modeling the beam dynamics and optics of the ISIS Rapid Cycling Synchrotron:
 
 ```text
-isis-rcs-optics/
+isis-synchrotron-optics/
 ├── src/
 │   └── optics_gui/
 │       ├── io/                    # EPICS Archiver REST client & data ingestion
