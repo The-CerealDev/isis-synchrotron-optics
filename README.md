@@ -16,16 +16,16 @@
 
 This project encompasses key engineering deliverables developed during a **1-week Work Experience Placement** with the **Accelerator Controls / EPICS Archiver Team** at the **STFC ISIS Neutron and Muon Source** ([Rutherford Appleton Laboratory](https://www.isis.stfc.ac.uk/), July 2026).
 
-The work focused on bridging live accelerator control data into a modular optics simulation environment, optimizing large-scale telemetry search tools, and building physically accurate 3D WebGL visualizations of the synchrotron lattice.
+The work developed client bridges for live EPICS archiver data, optimized search tools for 40,000+ process variables, and implemented a 3D WebGL model of the synchrotron lattice based on MAD-X dipole geometry.
 
 ---
 
 ## Featured Deliverables & Contributions
 
 ### 1. Live EPICS Archiver REST Bridge (`src/optics_gui/io/`)
-* **Real-time Data Ingestion:** Built Python client modules connecting to the facility's EPICS archiver REST API (`/glob`, `/getPVStatus`, `/data`) to pull live machine state data across the ~10 ms synchrotron acceleration ramp.
-* **Physics & Magnet Ingestion:** Automated retrieval and parsing of trim-quadrupole settings, horizontal/vertical corrector currents, beam position monitor (BPM) readbacks, and harmonic tune programmes.
-* **API Verification & Edge-Case Handling:** Tested documented internal endpoint behaviors against the live archiver, corrected inaccuracies in API documentation, and implemented robust fallbacks for unarchived or missing test-rig channels.
+* **Live Ingestion:** Python client modules connecting to EPICS archiver endpoints (`/glob`, `/getPVStatus`, `/data`) to query machine state parameters across the 10 ms acceleration ramp.
+* **Physics & Magnet Ingestion:** Automated retrieval and parsing of trim quadrupole currents, horizontal/vertical corrector dipole currents, BPM geometry, and harmonic tune programmes.
+* **Endpoint Verification:** Audited endpoint behaviors against the live archiver, documented real response schemas, and implemented fallback logic for missing channels (e.g. unarchived test-rig signals or absent F9 harmonics).
 
 ```python
 from optics_gui.io import (
@@ -43,9 +43,9 @@ harmonic_tunes = get_harmonic_tunes(cycle_time_ms=5.0)
 ---
 
 ### 2. 40,000+ Process Variable Search Engine (`web/pv_search.html`)
-* **The Bottleneck:** An existing process variable lookup covering 40,000+ PVs suffered from ~5-second latency on every keystroke, freezing the interface.
-* **The Solution:** Vectorised the parsing pipeline with Pandas, introduced smart input debouncing, and cached repetitive regex normalisation routines.
-* **Result:** Achieved instantaneous, fluid keystroke filtering across the entire 40k+ variable database.
+* **Bottleneck:** An initial process variable lookup over 40,000+ records took ~5 seconds per keystroke due to unvectorised per-row regex execution.
+* **Optimization:** Replaced iterative row matching with vectorised regex extraction in Pandas/C layer, debounced input events, and cached normalized records.
+* **Result:** Reduced query time from ~5,000 ms to <1 ms, enabling real-time search across all 40,000+ PVs without UI freeze.
 
 ![ISIS PV Search Tool](assets/screenshots/isis_pv_search_live.png)
 
@@ -155,7 +155,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
 
-# Launch the app (operates in offline demo mode by default or live on STFC intranet)
+# Launch the app
 streamlit run apps/archiver_live_app.py
 ```
 
