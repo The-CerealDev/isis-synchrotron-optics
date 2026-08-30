@@ -155,9 +155,19 @@ source .venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
 
-# Launch the app
+# Launch the app (operates in offline demo mode by default or live on STFC intranet)
 streamlit run apps/archiver_live_app.py
 ```
+
+### 4. Running the Offline Demonstration Suite
+Verify all deliverables end-to-end without requiring access to the internal STFC network:
+```bash
+python3 scripts/demo_run.py
+```
+This suite automatically validates:
+1. **EPICS Archiver REST Ingestion:** Correctors (HD/VD) and tune setpoints ($Q_x = 4.331, Q_y = 3.731$) mapped from authentic ISIS snapshots.
+2. **PV Search Engine:** Sub-millisecond regex queries over thousands of process variables.
+3. **MAD-X Lattice & Kinematics:** Full relativistic beam ramp calculation ($70 \to 800\text{ MeV}$) and TWISS optics execution across 36 beam position monitors.
 
 ---
 

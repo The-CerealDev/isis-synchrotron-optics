@@ -31,4 +31,4 @@ def test_packaged_source_aperture_data_loads():
 
 
 def test_repo_local_lattice_data_remains_external():
-    assert Path("Dev/Lattice_Files").is_dir()
+    assert Path("tutorials/Lattice_Files").is_dir()

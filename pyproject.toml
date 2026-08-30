@@ -26,3 +26,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 optics_gui = ["data/aperture/*.csv"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
