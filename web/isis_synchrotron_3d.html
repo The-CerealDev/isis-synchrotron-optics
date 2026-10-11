@@ -188,7 +188,7 @@ input, select, button { font-family:inherit; accent-color:var(--accent); }
       <li>Physics constants and conversion formulas are ported verbatim from <code>Dev/01_Cycle_Time/cycle_time.py</code> and <code>Dev/02_Machine_State/{tune_control,correctors,machine_state,machine_state_defaults}.py</code>.</li>
       <li>The one-turn transfer-matrix / Twiss engine, closed-orbit Green's function, and betatron-wobble animation are this simulation's own equivalent of what MAD-X/cpymad would report — the real repo has no portable pure-Python formula for "actual tune" or orbit correction (both are MAD-X-only), so "Qx/Qy (simulated)" will not exactly match the Di-Wright-requested tune. That mismatch is physically realistic — it mirrors the real system.</li>
       <li>Each real quadrupole is modelled as its full real 9-slice chain (8 fringe segments + 1 core, each with its own real K-value and length from <code>ISIS.strength</code>) rather than one collapsed effective thick quad — collapsing the fringes into a single core-only lens made the horizontal one-turn matrix unconditionally unstable (trace in the millions), which silently froze "Qx/Qy (simulated)" at an integer for every setting. The full real chain is stable.</li>
-      <li>At the default zero-trim ("bare") setting the vertical beta function swings to roughly 100&nbsp;m at some QD/QDS locations — verified self-consistent (the Courant-Snyder invariant β·γ−α²=1 holds to ~1e-12 everywhere) rather than a numerical bug, but it reflects an unmatched bare lattice: real operation would additionally re-tune the main QD/QF/QDS family gradients (MAD-X's MATCH), not just the weak trim quads, to flatten this — that matching procedure isn't implemented here.</li>
+      <li>At the default setting the one-turn matrices give Qx&nbsp;&asymp;&nbsp;4.34, Qy&nbsp;&asymp;&nbsp;3.83 (the ISIS working point) with periodic beta functions of about 2&ndash;19&nbsp;m horizontally and 5&ndash;17&nbsp;m vertically. The phase advance takes the sign of M<sub>12</sub>, so fractional tunes above 0.5 (such as Qy&nbsp;=&nbsp;3.83) are recovered correctly; an earlier version used arccos alone, read 3.83 as 3.17, propagated the wrong &alpha; and inflated &beta;<sub>y</sub> to about 100&nbsp;m.</li>
       <li>The RF cavity marker follows the PDF's single-period schematic (page 27) but does not exist in ISIS.elements/ISIS.sequence — schematic only.</li>
       <li>The superperiod-9 sextupole is real (k2=0 in source) but shown as a static visual element — no portable nonlinear formula exists to animate it.</li>
       <li>Aperture margin uses an illustrative ±40&nbsp;mm placeholder half-width, not a repo-sourced value (real aperture data lives in an external CSV, not a portable default).</li>
@@ -248,7 +248,7 @@ const SRM_BARE_SCALING = {
 const MAIN_MAGNET_SCALING_PRESETS = { rcs_bare: RCS_BARE_SCALING, srm_bare: SRM_BARE_SCALING };
 
 const DEFAULT_EMITTANCE_PI_MM_MRAD = 300.0;
-const DEFAULT_SIGMA_SCALE = 3.0;
+const DEFAULT_SIGMA_SCALE = 1.0;
 const DEFAULT_DP_OVER_P = 0.002;
 
 const RING_CIRCUMFERENCE_M = 163.36282;
@@ -1031,7 +1031,10 @@ function oneTurnMatrix(matrices, plane) {
 function extractTune(M, baseTune) {
   const trace = M[0][0] + M[1][1];
   const cosMu = Math.min(1, Math.max(-1, trace / 2));
-  const mu = Math.acos(cosMu);
+  // acos only covers mu in [0, pi]. The sign of sin(mu) must match M12 (beta > 0),
+  // so when M12 < 0 the phase advance is 2*pi - mu (fractional tune above 0.5).
+  let mu = Math.acos(cosMu);
+  if (M[0][1] < 0) mu = 2 * Math.PI - mu;
   const qFrac = mu / (2 * Math.PI);
   const qInt = Math.floor(baseTune);
   return { mu, qFrac, q: qInt + qFrac };
