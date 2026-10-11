@@ -1446,7 +1446,19 @@ function buildRingCurve() {
   pts.forEach(p => centre.add(p));
   centre.divideScalar(pts.length);
   pts.forEach(p => p.sub(centre));
-  ringCurve = new THREE.CatmullRomCurve3(pts, true, 'catmullrom', 0.5);
+  // Thin the control points: corrector and fringe slices sit millimetres apart, and a
+  // spline through such uneven spacing wiggles, flipping the local tangent (and so the
+  // radial direction the beam is offset along). Keep points at least 0.25 m apart, drop
+  // the closing point that duplicates the start, and use a centripetal spline.
+  const MIN_GAP_M = 0.25;
+  const thinned = [pts[0]];
+  for (let i = 1; i < pts.length; i++) {
+    if (pts[i].distanceTo(thinned[thinned.length - 1]) >= MIN_GAP_M) thinned.push(pts[i]);
+  }
+  while (thinned.length > 3 && thinned[thinned.length - 1].distanceTo(thinned[0]) < MIN_GAP_M) thinned.pop();
+  ringCurve = new THREE.CatmullRomCurve3(thinned, true, 'centripetal');
+  ringCurve.arcLengthDivisions = 4000;
+  ringCurve.updateArcLengths();
 }
 
 function elementVisualSpec(el) {
@@ -2027,6 +2039,10 @@ let isPlaying = true;
 let speedMultiplier = 0.15; // artificial turns/sec — real ISIS revolution is ~us-scale, shown separately as a stat
 let totalTurns = 0;
 let oscillationPhaseX = 0, oscillationPhaseY = 0;
+// Betatron phase of the bunch = phi(s) + oscillationPhase. phi(s) already advances by
+// 2*pi*Q over one lap, so oscillationPhase only steps by 2*pi*Q when a lap completes;
+// that keeps the motion continuous where s wraps from the ring's end back to 0.
+let lapsCounted = 0;
 const clock = new THREE.Clock();
 const ENVELOPE_DISPLAY_EMIT = DEFAULT_EMITTANCE_PI_MM_MRAD * 1e-6;
 
@@ -2065,8 +2081,13 @@ function animate() {
 
   if (isPlaying) {
     totalTurns += dt * speedMultiplier;
-    oscillationPhaseX += dt * speedMultiplier * 2 * Math.PI * machineState._tuneX.q;
-    oscillationPhaseY += dt * speedMultiplier * 2 * Math.PI * machineState._tuneY.q;
+    const lap = Math.floor(totalTurns);
+    if (lap > lapsCounted) {
+      const n = lap - lapsCounted;
+      oscillationPhaseX += n * 2 * Math.PI * machineState._tuneX.q;
+      oscillationPhaseY += n * 2 * Math.PI * machineState._tuneY.q;
+      lapsCounted = lap;
+    }
   }
   updateBeamMarker();
   updatePlaybackReadout();
