@@ -107,7 +107,6 @@ isis-synchrotron-optics/
 │   └── archiver_live_app.py       # Streamlit live archiver bridge application
 ├── assets/
 │   └── screenshots/               # High-res UI & 3D renders
-├── docs/                          # Placement notes, EPICS reference, and guides
 └── tutorials/                     # Step-by-step interactive Jupyter notebooks
 ```
 
